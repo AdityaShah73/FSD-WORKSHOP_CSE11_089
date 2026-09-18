@@ -1,0 +1,65 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+}
+
+.api-form {
+  width: 450px;
+  margin: 60px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.api-form h1 {
+  text-align: center;
+  margin: 0;
+  color: #222;
+}
+
+.api-form p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.api-form label {
+  display: block;
+  margin-bottom: 6px;
+  margin-top: 18px;
+  color: #333;
+  font-weight: bold;
+}
+
+.api-form select,
+.api-form input[type="text"],
+.api-form textarea {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.api-form textarea {
+  resize: vertical;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 25px;
+  padding: 11px;
+  border: none;
+  border-radius: 6px;
+  background: #4f46e5;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: #3730a3;
+}
