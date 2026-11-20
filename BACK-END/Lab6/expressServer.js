@@ -1,152 +1,60 @@
-import express from 'express'
-import dotenv from 'dotenv'
-import cors from 'cors'
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./db.js";
+import Student from "./students.js";
 
-const port = 3000
+dotenv.config();
 
-const app = express()
-app.use(express.json())
-const array = [
-    {
-        id: 1,
-        name: "Akarsh",
-        age: 20
-    },
-    {
-        id: 2,
-        name: "Akshat",
-        age: 21
-    },
-    {
-        id: 3,
-        name: "Ansh",
-        age: 17
-    }
-]
+const app = express();
 
+app.use(express.json());
+
+// Connect MongoDB
+await connectDB();
+
+// Home route
 app.get("/", (req, res) => {
-    res.status(200).send(`listening on port ${port}`)
-})
+    res.send("Welcome to Student Management API!");
+});
 
-app.get("/msg", (req, res) => {
-    res.status(200).json({
-        message : "Welcome to express server"
-    })
-})
-
-
-app.get("/user", (req, res) => {
+// POST - Insert student
+app.post("/test-db", async (req, res) => {
     try {
-        res.status(200).json({
-            message: "data recieved",
-            userData: array
-        })
-    } catch (err) {
-        console.error(err.message)
-        res.status(500).json({
-            message: "Internal server error"
-        })
-    }
-})
+        const student = await Student.create({
+            name: "Rahul Sharma",
+            email: "rahul@gmail.com",
+            course: "MERN Stack",
+        });
 
-app.get("/user/:id", (req, res) => {
-    try {
-        const id = req.params.id ;
-        const user = array.find((u)=> u.id == id);
-        if(!user){
-            return res.status(400).json({message: "user not found"})
-        }
-        res.status(200).json({message : "user found" , 
-            user
-        })
-    } catch (err) {
-        console.error(err.message)
-        res.status(500).json({
-            message: "Internal server error"
-        })
-    }
-})
-
-app.post("/create" , (req,res)=>{
-    try{
-        const {name , age} = req.body ;
-        const newUser = {
-            id: array.length+1,
-            name,
-            age,
-        };
-        array.push(newUser);
-        console.log("User added successfully")
-        console.log(array)
         res.status(201).json({
-            message: "User created successfully",
-            userData: newUser
-        })
-    }
-    catch(err){
-        console.error(err.message)
-        res.status(500).json({
-            message: "Internal server error"
-        })
-    }
-})
+            message: "Data inserted successfully!",
+            data: student,
+        });
 
-app.put("/user/:id", (req, res) => {
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+});
+
+// GET - Fetch all students
+app.get("/test-db", async (req, res) => {
     try {
-        const id = req.params.id
-        const { name, age } = req.body
+        const students = await Student.find();
 
-        const user = array.find((u) => u.id == id)
+        res.status(200).json(students);
 
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            })
-        }
-
-        user.name = name
-        user.age = age
-
-        res.status(200).json({
-            message: "User updated successfully",
-            userData: user
-        })
-    }
-    catch (err) {
-        console.error(err.message)
+    } catch (error) {
         res.status(500).json({
-            message: "Internal server error"
-        })
+            message: error.message,
+        });
     }
-})
+});
 
-app.delete("/user/:id", (req, res) => {
-    try {
-        const id = req.params.id
+// Start server
+const PORT = process.env.PORT || 5000;
 
-        const index = array.findIndex((u) => u.id == id)
-
-        if (index === -1) {
-            return res.status(404).json({
-                message: "User not found"
-            })
-        }
-
-        const deletedUser = array.splice(index, 1)
-
-        res.status(200).json({
-            message: "User deleted successfully",
-            userData: deletedUser[0]
-        })
-    }
-    catch (err) {
-        console.error(err.message)
-        res.status(500).json({
-            message: "Internal server error"
-        })
-    }
-})
-
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`)
-})
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}`);
+});
